@@ -1,36 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# VoltSync Pro AI
 
-## Getting Started
+VoltSync Pro AI is a futuristic smart grid simulation dashboard built with Next.js. It combines real-time grid monitoring, interactive power sector controls, and browser-based AI forecasting for a complete energy system demo.
 
-First, run the development server:
+## Live demo
+
+https://voltsync-pro-ai.vercel.app/
+
+## What it does
+
+- Simulates a power grid with multiple energy sources and demand sectors.
+- Displays live supply vs demand charts and key grid metrics.
+- Uses TensorFlow.js to forecast demand in the browser.
+- Offers interactive controls for AI mode, auto-simulation, and cycle interval.
+- Shows alert conditions when supply or demand stress occurs.
+
+## Features
+
+- Modern **Next.js 15** app-router architecture
+- **React 19** + **TypeScript** for a strong UI foundation
+- **TensorFlow.js** on-device forecasting
+- **Recharts** for dynamic visualization
+- Responsive dashboard panels and real-time simulation controls
+
+## Technologies
+
+- Next.js
+- React
+- TypeScript
+- Tailwind CSS
+- TensorFlow.js
+- Recharts
+- Framer Motion
+- Lucide React
+
+## Local development
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then open `http://localhost:3000` in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Build and deploy
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm run start
+```
 
-## Learn More
+For free deployment, use Vercel or any static-friendly Next.js hosting provider.
 
-To learn more about Next.js, take a look at the following resources:
+## Notes
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- The app runs entirely in the browser and does not require a backend.
+- AI forecasting is performed locally using TensorFlow.js.
+- The demo link above points to the live Vercel deployment.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Project structure
 
-## Deploy on Vercel
+- `app/` — page and layout entrypoints
+- `components/` — UI widgets and dashboard panels
+- `lib/` — grid simulation and forecasting logic
+- `public/` — static assets
+- `package.json` — dependencies and scripts
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
