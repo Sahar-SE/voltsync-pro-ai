@@ -57,6 +57,8 @@ For free deployment, use Vercel or any static-friendly Next.js hosting provider.
 - AI forecasting is performed locally using TensorFlow.js.
 - The demo link above points to the live Vercel deployment.
 
+If you like this project, please give it a ⭐ on GitHub!
+
 ## Project structure
 
 - `app/` — page and layout entrypoints
