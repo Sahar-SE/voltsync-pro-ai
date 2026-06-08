@@ -1,16 +1,15 @@
 'use client';
-
 import * as tf from '@tensorflow/tfjs';
 import type { GridState } from './gridData';
 
 export type ForecastResult = {
   predictedDemand: number;
   predictedSupply: number;
-  riskScore: number; // 0-100
+  riskScore: number;
   riskLevel: 'LOW' | 'MODERATE' | 'HIGH' | 'CRITICAL';
   recommendations: string[];
   confidence: number;
-  loadForecast: number[]; // next 6 cycles
+  loadForecast: number[];
 };
 
 let model: tf.Sequential | null = null;
@@ -29,8 +28,6 @@ async function getModel(): Promise<tf.Sequential> {
   });
 
   model.compile({ optimizer: tf.train.adam(0.001), loss: 'meanSquaredError' });
-
-  // Generate synthetic training data and train briefly
   const xs: number[][] = [];
   const ys: number[][] = [];
 
@@ -113,18 +110,14 @@ export async function runForecast(state: GridState, history: number[]): Promise<
   const predictedSupply = output[1] * 4000;
   const rawRisk = output[2] * 100;
   const loadForecast = Array.from(output.slice(3)).map(v => v * 4000);
-
-  // Augment with rule-based adjustments
   const freqRisk = Math.abs(state.frequency - 50) * 40;
   const stabRisk = (100 - state.stability) * 0.5;
   const balanceRisk = Math.max(0, Math.abs(balance) / state.totalDemand * 100 - 5);
-
   const riskScore = Math.min(100, rawRisk * 0.5 + freqRisk * 0.2 + stabRisk * 0.15 + balanceRisk * 0.15);
   const riskLevel: ForecastResult['riskLevel'] =
     riskScore < 25 ? 'LOW' :
     riskScore < 50 ? 'MODERATE' :
     riskScore < 75 ? 'HIGH' : 'CRITICAL';
-
   const recommendations: string[] = [];
   if (balance < -100) recommendations.push('Activate reserve capacity — supply deficit detected');
   if (balance > 500) recommendations.push('Reduce gas turbine output — surplus exceeds buffer');
@@ -135,7 +128,6 @@ export async function runForecast(state: GridState, history: number[]): Promise<
   const lowEffSources = state.sources.filter(s => s.efficiency < 60 && s.current > 0);
   if (lowEffSources.length > 0) recommendations.push(`Inspect low-efficiency units: ${lowEffSources.map(s => s.name).join(', ')}`);
   if (recommendations.length === 0) recommendations.push('Grid operating within optimal parameters');
-
   const confidence = Math.max(65, Math.min(98, 85 + (state.stability - 50) * 0.3));
 
   return {
