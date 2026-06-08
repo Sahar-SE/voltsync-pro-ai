@@ -1,5 +1,4 @@
 'use client';
-
 import { useState } from 'react';
 import type { Sector } from '@/lib/gridData';
 import { TrendingUp, TrendingDown, Minus, Power, Edit2, Check, X } from 'lucide-react';
@@ -9,7 +8,6 @@ type Props = {
   onToggle: (id: string) => void;
   onDemandChange: (id: string, demand: number) => void;
 };
-
 const PRIORITY_LABELS: Record<number, { label: string; color: string }> = {
   1: { label: 'P1', color: 'var(--accent-red)' },
   2: { label: 'P2', color: 'var(--accent-amber)' },
@@ -64,23 +62,16 @@ export default function SectorPanel({ sectors, onToggle, onDemandChange }: Props
               }}
             >
               <div className="flex items-center gap-2">
-                {/* Priority badge */}
                 <span
                   className="font-orbitron text-xs px-1 flex-shrink-0"
                   style={{ color: pri.color, background: `${pri.color}15`, border: `1px solid ${pri.color}33`, fontSize: '0.5rem' }}
                 >
                   {pri.label}
                 </span>
-
-                {/* Name */}
                 <span className="font-rajdhani font-semibold text-sm flex-1 truncate" style={{ color: sector.online ? 'var(--text-primary)' : 'var(--text-muted)' }}>
                   {sector.name}
                 </span>
-
-                {/* Trend */}
                 <TrendIcon size={12} style={{ color: trendColor, flexShrink: 0 }} />
-
-                {/* Demand edit */}
                 {editing === sector.id ? (
                   <div className="flex items-center gap-1">
                     <input
@@ -108,8 +99,6 @@ export default function SectorPanel({ sectors, onToggle, onDemandChange }: Props
                     </button>
                   </div>
                 )}
-
-                {/* Toggle */}
                 <button
                   onClick={() => onToggle(sector.id)}
                   className="flex-shrink-0 ml-1"
@@ -121,8 +110,6 @@ export default function SectorPanel({ sectors, onToggle, onDemandChange }: Props
                   />
                 </button>
               </div>
-
-              {/* Allocation bar */}
               <div className="meter-bar mt-2">
                 <div
                   className="meter-fill"
@@ -132,12 +119,17 @@ export default function SectorPanel({ sectors, onToggle, onDemandChange }: Props
                   }}
                 />
               </div>
-
               <div className="flex justify-between mt-1">
-                <span className="font-mono-tech" style={{ fontSize: '0.6rem', color: 'var(--text-muted)' }}>
+                <span
+                  className="font-mono-tech"
+                  style={{ fontSize: '0.6rem', color: 'var(--text-muted)' }}
+                >
                   {allocPct.toFixed(0)}% SUPPLIED
                 </span>
-                <span className="font-mono-tech" style={{ fontSize: '0.6rem', color: 'var(--text-muted)' }}>
+                <span
+                  className="font-mono-tech"
+                  style={{ fontSize: '0.6rem', color: 'var(--text-muted)' }}
+                >
                   EFF {sector.efficiency}%
                 </span>
               </div>
