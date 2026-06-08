@@ -12,10 +12,17 @@ type Props = {
   onIntervalChange: (v: number) => void;
 };
 
-export default function ControlBar({ aiEnabled, autoMode, cycleInterval, onToggleAI, onToggleAuto, onManualCycle, onIntervalChange }: Props) {
+export default function ControlBar({
+  aiEnabled, 
+  autoMode,
+  cycleInterval,
+  onToggleAI,
+  onToggleAuto, 
+  onManualCycle, 
+  onIntervalChange 
+}: Props) {
   const intervals = [2000, 4000, 8000];
   const intervalLabels: Record<number, string> = { 2000: '2s', 4000: '4s', 8000: '8s' };
-
   return (
     <div className="panel mb-3 px-4 py-3 flex flex-wrap items-center gap-3">
       <div className="font-orbitron text-xs" style={{ color: 'var(--text-muted)', letterSpacing: '0.15em' }}>
@@ -33,8 +40,6 @@ export default function ControlBar({ aiEnabled, autoMode, cycleInterval, onToggl
         <Brain size={12} />
         AI {aiEnabled ? 'ON' : 'OFF'}
       </button>
-
-      {/* Auto/Manual */}
       <button
         onClick={onToggleAuto}
         className={`btn-primary flex items-center gap-2 ${autoMode ? 'btn-active' : ''}`}
@@ -43,8 +48,6 @@ export default function ControlBar({ aiEnabled, autoMode, cycleInterval, onToggl
         {autoMode ? <Pause size={12} /> : <Play size={12} />}
         {autoMode ? 'AUTO' : 'MANUAL'}
       </button>
-
-      {/* Manual trigger */}
       {!autoMode && (
         <button onClick={onManualCycle} className="btn-primary flex items-center gap-2">
           <RefreshCw size={12} />
@@ -53,8 +56,6 @@ export default function ControlBar({ aiEnabled, autoMode, cycleInterval, onToggl
       )}
 
       <div className="w-px h-4 mx-1" style={{ background: 'var(--border-subtle)' }} />
-
-      {/* Cycle speed */}
       <div className="flex items-center gap-2">
         <Clock size={12} style={{ color: 'var(--text-muted)' }} />
         <span className="font-mono-tech text-xs" style={{ color: 'var(--text-muted)' }}>INTERVAL:</span>
