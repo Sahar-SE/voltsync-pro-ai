@@ -79,7 +79,6 @@ export default function AIAnalysis({
       </div>
 
       <div className="p-3 flex-1 space-y-3 overflow-auto">
-        {/* Risk Badge */}
         <div
           className="p-3 flex items-center gap-3"
           style={{
@@ -104,7 +103,6 @@ export default function AIAnalysis({
           </div>
         </div>
 
-        {/* Risk bar */}
         <div>
           <div className="font-orbitron text-xs mb-1" style={{ color: 'var(--text-muted)', fontSize: '0.55rem', letterSpacing: '0.1em' }}>
             RISK SCORE
@@ -121,7 +119,6 @@ export default function AIAnalysis({
           </div>
         </div>
 
-        {/* Forecast metrics */}
         <div className="grid grid-cols-2 gap-2">
           <div className="p-2" style={{ background: 'var(--bg-panel)', border: '1px solid var(--border-subtle)' }}>
             <div className="font-mono-tech" style={{ fontSize: '0.6rem', color: 'var(--text-muted)' }}>PRED. DEMAND</div>
@@ -139,7 +136,6 @@ export default function AIAnalysis({
           </div>
         </div>
 
-        {/* Recommendations */}
         <div>
           <div className="font-orbitron text-xs mb-2" style={{ color: 'var(--text-muted)', fontSize: '0.55rem', letterSpacing: '0.1em' }}>
             AI RECOMMENDATIONS
@@ -163,8 +159,7 @@ export default function AIAnalysis({
             ))}
           </div>
         </div>
-
-        {/* 6-cycle load forecast */}
+        
         {forecast.loadForecast.length > 0 && (
           <div>
             <div className="font-orbitron text-xs mb-2" style={{ color: 'var(--text-muted)', fontSize: '0.55rem', letterSpacing: '0.1em' }}>
