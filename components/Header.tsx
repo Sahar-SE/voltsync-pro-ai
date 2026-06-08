@@ -1,5 +1,4 @@
 'use client';
-
 import { useState, useEffect } from 'react';
 import { Zap } from 'lucide-react';
 
@@ -17,7 +16,6 @@ export default function Header({ cycleCount, timestamp }: { cycleCount: number; 
     <header className="py-4 mb-3">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          {/* Logo */}
           <div className="relative">
             <div className="w-10 h-10 flex items-center justify-center" style={{
               background: 'var(--bg-card)',
@@ -58,8 +56,6 @@ export default function Header({ cycleCount, timestamp }: { cycleCount: number; 
           </div>
         </div>
       </div>
-
-      {/* Decorative separator */}
       <div className="mt-3 h-px" style={{
         background: 'linear-gradient(90deg, transparent, var(--accent-cyan)88, var(--accent-blue)44, transparent)',
       }} />
