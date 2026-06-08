@@ -4,7 +4,12 @@ import type { GridState } from '@/lib/gridData';
 
 type Props = { grid: GridState };
 
-function Metric({ label, value, unit, color, sub }: { label: string; value: string | number; unit?: string; color: string; sub?: string }) {
+function Metric({ 
+  label, 
+  value,
+  unit,
+  color,
+  sub }: { label: string; value: string | number; unit?: string; color: string; sub?: string }) {
   return (
     <div className="panel p-4 flex flex-col gap-1 corner-tl corner-br">
       <div className="font-orbitron text-xs tracking-widest" style={{ color: 'var(--text-muted)' }}>
@@ -30,9 +35,7 @@ export default function GridMetrics({ grid }: Props) {
 
   const stabColor = grid.stability > 70 ? 'var(--accent-green)' :
     grid.stability > 40 ? 'var(--accent-amber)' : 'var(--accent-red)';
-
   const loadPct = Math.round((grid.totalDemand / Math.max(grid.totalSupply, 1)) * 100);
-
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3 mb-3">
       <Metric
