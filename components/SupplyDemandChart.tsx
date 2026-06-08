@@ -1,13 +1,10 @@
 'use client';
-
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, ReferenceLine, Legend
 } from 'recharts';
 import type { ForecastResult } from '@/lib/tfForecaster';
-
 type HistoryPoint = { supply: number; demand: number; time: number };
-
 type Props = {
   history: HistoryPoint[];
   forecast: ForecastResult | null;
@@ -33,8 +30,6 @@ export default function SupplyDemandChart({ history, forecast }: Props) {
     supply: h.supply,
     demand: h.demand,
   }));
-
-  // Append forecast points
   if (forecast?.loadForecast) {
     forecast.loadForecast.slice(0, 6).forEach((v, i) => {
       chartData.push({
@@ -101,9 +96,35 @@ export default function SupplyDemandChart({ history, forecast }: Props) {
             <Legend
               wrapperStyle={{ fontFamily: 'Share Tech Mono', fontSize: '10px', color: 'var(--text-muted)', paddingTop: '8px' }}
             />
-            <Area type="monotone" dataKey="supply" stroke="#00f5ff" strokeWidth={2} fill="url(#supplyGrad)" dot={false} connectNulls />
-            <Area type="monotone" dataKey="demand" stroke="#0088ff" strokeWidth={2} fill="url(#demandGrad)" dot={false} connectNulls />
-            <Area type="monotone" dataKey="forecastDemand" stroke="#8855ff" strokeWidth={1.5} strokeDasharray="4 2" fill="url(#forecastGrad)" dot={false} connectNulls name="ai forecast" />
+            <Area
+              type="monotone"
+              dataKey="supply"
+              stroke="#00f5ff"
+              strokeWidth={2}
+              fill="url(#supplyGrad)"
+              dot={false}
+              connectNulls
+            />
+            <Area
+              type="monotone"
+              dataKey="demand"
+              stroke="#0088ff"
+              strokeWidth={2}
+              fill="url(#demandGrad)"
+              dot={false}
+              connectNulls
+            />
+            <Area
+              type="monotone"
+              dataKey="forecastDemand"
+              stroke="#8855ff"
+              strokeWidth={1.5} 
+              strokeDasharray="4 2"
+              fill="url(#forecastGrad)"
+              dot={false}
+              connectNulls
+              name="ai forecast"
+            />
           </AreaChart>
         </ResponsiveContainer>
       </div>
