@@ -1,5 +1,4 @@
 'use client';
-
 import type { PowerSource } from '@/lib/gridData';
 import { Sun, Wind, Atom, Droplets, Flame, Factory } from 'lucide-react';
 
@@ -24,7 +23,6 @@ const TYPE_LABELS: Record<string, string> = {
 export default function PowerSources({ sources }: { sources: PowerSource[] }) {
   const totalCapacity = sources.reduce((a, s) => a + s.capacity, 0);
   const totalCurrent = sources.reduce((a, s) => a + s.current, 0);
-
   return (
     <div className="panel">
       <div className="panel-header">
@@ -39,7 +37,6 @@ export default function PowerSources({ sources }: { sources: PowerSource[] }) {
           const Icon = ICONS[source.type];
           const pct = (source.current / source.capacity) * 100;
           const isActive = source.current > 0;
-
           return (
             <div
               key={source.id}
@@ -88,7 +85,6 @@ export default function PowerSources({ sources }: { sources: PowerSource[] }) {
                       </span>
                     </div>
                   </div>
-
                   <div className="meter-bar">
                     <div
                       className="meter-fill"
@@ -104,7 +100,10 @@ export default function PowerSources({ sources }: { sources: PowerSource[] }) {
                     <span className="font-mono-tech" style={{ fontSize: '0.6rem', color: 'var(--text-muted)' }}>
                       {pct.toFixed(1)}% UTILIZED
                     </span>
-                    <span className="font-mono-tech" style={{ fontSize: '0.6rem', color: 'var(--text-muted)' }}>
+                    <span
+                      className="font-mono-tech"
+                      style={{ fontSize: '0.6rem', color: 'var(--text-muted)'}}
+                    >
                       CAP {source.capacity.toLocaleString()} MW
                     </span>
                   </div>
