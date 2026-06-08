@@ -7,7 +7,6 @@ export default function AlertsPanel({ alerts }: { alerts: string[] }) {
   const [dismissed, setDismissed] = useState<number[]>([]);
   const visible = alerts.filter((_, i) => !dismissed.includes(i));
   if (visible.length === 0) return null;
-
   return (
     <div className="mb-3 space-y-1.5">
       {visible.map((alert, i) => (
