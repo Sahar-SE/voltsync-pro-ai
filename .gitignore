@@ -1,8 +1,6 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
-/node_modules
-/.pnp
+# Dependency folders
+node_modules/
+.pnp
 .pnp.*
 .yarn/*
 !.yarn/patches
@@ -10,35 +8,49 @@
 !.yarn/releases
 !.yarn/versions
 
-# testing
-/coverage
+# Next.js and frontend builds
+.next/
+out/
+build/
+dist/
+*.tsbuildinfo
 
-# next.js
-/.next/
-/out/
+# Python artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+env/
 
-# production
-/build
+# Databases
+*.db
+*.sqlite
+*.sqlite3
 
-# misc
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.env
+
+# Miscellaneous
 .DS_Store
+Thumbs.db
 *.pem
-
-# debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
-
-# env files (can opt-in for committing if needed)
-.env*
-
-# vercel
 .vercel
 
-# typescript
-*.tsbuildinfo
-next-env.d.ts
-
+# AI / agent documentation overrides
 AGENTS.md
 CLAUDE.md
+
