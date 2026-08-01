@@ -1,6 +1,7 @@
 import requests
 import time
 import random
+import json
 from app.core.config import EIA_API_KEY, EIA_REGION
 
 REGION_MAPPING = {
@@ -22,17 +23,21 @@ def fetch_grid_data(region: str = None) -> dict:
         url = "https://api.eia.gov/v2/electricity/rto/region-data/data/"
         
         # We fetch the latest records for the respondent (Demands and Net Generation)
-        params = {
-            "api_key": EIA_API_KEY,
+        params_dict = {
             "frequency": "hourly",
-            "data[]": "value",
-            "facets[respondent][]": respondent,
-            "sort[0][column]": "period",
-            "sort[0][direction]": "desc",
-            "limit": 10
+            "data": ["value"],
+            "facets": {
+                "respondent": [respondent]
+            },
+            "sort": [
+                {"column": "period", "direction": "desc"}
+            ],
+            "offset": 0,
+            "length": 10
         }
         
-        response = requests.get(url, params=params, timeout=5)
+        headers = {"X-Params": json.dumps(params_dict)}
+        response = requests.get(url, params={"api_key": EIA_API_KEY}, headers=headers, timeout=5)
         response.raise_for_status()
         data = response.json()
         
