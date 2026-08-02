@@ -56,7 +56,14 @@ export default function Home() {
     function connect() {
       console.log('Connecting to VoltSync Telemetry WS:', wsUrl);
       setConnectionStatus('reconnecting');
-      ws = new WebSocket(wsUrl);
+      try {
+        ws = new WebSocket(wsUrl);
+      } catch (error) {
+        console.error('Failed to create WebSocket connection:', error);
+        setConnectionStatus('disconnected');
+        reconnectTimeout = setTimeout(connect, 3000);
+        return;
+      }
 
       ws.onopen = () => {
         console.log('Telemetry WS Connected');
