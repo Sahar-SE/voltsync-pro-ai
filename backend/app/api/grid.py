@@ -127,6 +127,28 @@ async def control_grid(payload: ControlRequest):
             "voltage": new_voltage
         }
         
+    elif action == "adjust_demand":
+        sector_id = payload.sector_id
+        new_demand = payload.value
+        if not sector_id or new_demand is None:
+            raise HTTPException(status_code=400, detail="sector_id and value parameters are required for adjust_demand action.")
+            
+        from app.services.interpolation import set_active_sector_demand
+        set_active_sector_demand(sector_id, new_demand)
+        
+        save_operator_action(
+            actor="operator",
+            action_type="adjust_demand",
+            target_sector=sector_id,
+            value=new_demand,
+            status="executed"
+        )
+        return {
+            "status": "success",
+            "message": f"Sector '{sector_id}' demand set to {new_demand} MW.",
+            "demand": new_demand
+        }
+        
     else:
         raise HTTPException(status_code=400, detail=f"Unsupported action: {action}")
 

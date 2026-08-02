@@ -123,22 +123,87 @@ export default function Home() {
     console.log('Manual cycle trigger (disabled under live telemetry)');
   };
 
-  const handleToggleSector = (id: string) => {
+  const handleToggleSector = async (id: string) => {
+    let currentOnline = true;
     setGrid(prev => {
       if (!prev) return prev;
+      const target = prev.sectors.find(s => s.id === id);
+      if (target) currentOnline = target.online;
       const next = { ...prev, sectors: prev.sectors.map(s => s.id === id ? { ...s, online: !s.online } : s) };
       gridRef.current = next;
       return next;
     });
+
+    if (connectionStatus === 'connected') {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000';
+      try {
+        const response = await fetch(`${apiUrl}/api/grid/control`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            action: 'toggle_sector',
+            sector_id: id,
+          }),
+        });
+        if (!response.ok) {
+          const err = await response.json();
+          throw new Error(err.detail || 'Failed to toggle sector');
+        }
+      } catch (e: any) {
+        console.error('Error toggling sector:', e);
+        setGrid(prev => {
+          if (!prev) return prev;
+          const next = { ...prev, sectors: prev.sectors.map(s => s.id === id ? { ...s, online: currentOnline } : s) };
+          gridRef.current = next;
+          return next;
+        });
+        alert(e.message || 'Interlock Block: Safety rule violated.');
+      }
+    }
   };
 
-  const handleSectorDemand = (id: string, demand: number) => {
+  const handleSectorDemand = async (id: string, demand: number) => {
+    let oldDemand = 0;
     setGrid(prev => {
       if (!prev) return prev;
+      const target = prev.sectors.find(s => s.id === id);
+      if (target) oldDemand = target.demand;
       const next = { ...prev, sectors: prev.sectors.map(s => s.id === id ? { ...s, demand } : s) };
       gridRef.current = next;
       return next;
     });
+
+    if (connectionStatus === 'connected') {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000';
+      try {
+        const response = await fetch(`${apiUrl}/api/grid/control`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            action: 'adjust_demand',
+            sector_id: id,
+            value: demand,
+          }),
+        });
+        if (!response.ok) {
+          const err = await response.json();
+          throw new Error(err.detail || 'Failed to adjust sector demand');
+        }
+      } catch (e: any) {
+        console.error('Error adjusting sector demand:', e);
+        setGrid(prev => {
+          if (!prev) return prev;
+          const next = { ...prev, sectors: prev.sectors.map(s => s.id === id ? { ...s, demand: oldDemand } : s) };
+          gridRef.current = next;
+          return next;
+        });
+        alert(e.message || 'Error adjusting sector demand.');
+      }
+    }
   };
 
   if (!grid) {

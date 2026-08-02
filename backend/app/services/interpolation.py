@@ -48,6 +48,7 @@ INITIAL_SECTORS = [
 # Global mutable session states for grid operator controls
 ACTIVE_SECTORS_STATUS = {sec["id"]: True for sec in INITIAL_SECTORS}
 ACTIVE_VOLTAGE_SETPOINT = 220.0
+ACTIVE_SECTORS_DEMAND_OVERRIDE = {}
 
 def interpolate_grid_state(base_state: dict, cycle_count: int) -> dict:
     """
@@ -89,33 +90,44 @@ def interpolate_grid_state(base_state: dict, cycle_count: int) -> dict:
         
     # 3. Build detailed sectors list scaled to total demand
     sectors = []
+    actual_total_demand = 0.0
     for sec in INITIAL_SECTORS:
-        ratio = SECTOR_RATIOS.get(sec["id"], 0.0)
-        # Calculate current demand
-        demand = total_demand * ratio
+        is_online = ACTIVE_SECTORS_STATUS.get(sec["id"], True)
         
-        # Add random minor fluctuations to sector trends
-        trend_val = random.gauss(0, demand * 0.02)
-        demand = max(10.0, demand + trend_val)
-        
-        trend = "stable"
-        if trend_val > demand * 0.005:
-            trend = "up"
-        elif trend_val < -demand * 0.005:
-            trend = "down"
+        if sec["id"] in ACTIVE_SECTORS_DEMAND_OVERRIDE:
+            demand = ACTIVE_SECTORS_DEMAND_OVERRIDE[sec["id"]]
+            trend = "stable"
+        else:
+            ratio = SECTOR_RATIOS.get(sec["id"], 0.0)
+            # Calculate current demand
+            demand = total_demand * ratio
+            # Add random minor fluctuations to sector trends
+            trend_val = random.gauss(0, demand * 0.02)
+            demand = max(10.0, demand + trend_val)
+            
+            trend = "stable"
+            if trend_val > demand * 0.005:
+                trend = "up"
+            elif trend_val < -demand * 0.005:
+                trend = "down"
+                
+        if is_online:
+            actual_total_demand += demand
             
         sectors.append({
             "id": sec["id"],
             "name": sec["name"],
             "priority": sec["priority"],
-            "online": ACTIVE_SECTORS_STATUS.get(sec["id"], True),
+            "online": is_online,
             "efficiency": sec["efficiency"],
             "demand": int(round(demand)),
             "trend": trend,
-            # Placeholder for allocation (calculated dynamically by frontend/backend)
             "allocated": int(round(demand)) 
         })
         
+    # Use the sum of online sectors demand
+    total_demand = actual_total_demand
+    
     # Recalculate allocations based on priority
     sectors = allocate_supply_to_sectors(sectors, total_supply)
     
@@ -210,4 +222,11 @@ def set_active_voltage_setpoint(new_voltage: float):
 
 def get_active_voltage_setpoint() -> float:
     return ACTIVE_VOLTAGE_SETPOINT
+
+def set_active_sector_demand(sector_id: str, demand: float):
+    global ACTIVE_SECTORS_DEMAND_OVERRIDE
+    ACTIVE_SECTORS_DEMAND_OVERRIDE[sector_id] = demand
+
+def get_active_sector_demand(sector_id: str) -> float:
+    return ACTIVE_SECTORS_DEMAND_OVERRIDE.get(sector_id)
 
