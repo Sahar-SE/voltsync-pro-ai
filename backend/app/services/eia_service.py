@@ -50,11 +50,17 @@ def fetch_grid_data(region: str = None) -> dict:
         
         for record in records:
             rec_type = record.get("type")
-            val = record.get("value")
-            if rec_type == "D" and demand is None:
-                demand = val
-            elif rec_type == "NG" and generation is None:
-                generation = val
+            raw_val = record.get("value")
+            try:
+                val = float(raw_val) if raw_val is not None else None
+            except (ValueError, TypeError):
+                val = None
+                
+            if val is not None:
+                if rec_type == "D" and demand is None:
+                    demand = val
+                elif rec_type == "NG" and generation is None:
+                    generation = val
             if demand is not None and generation is not None:
                 break
                 

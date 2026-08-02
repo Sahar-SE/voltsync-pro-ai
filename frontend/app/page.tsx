@@ -164,10 +164,10 @@ export default function Home() {
       <div className="grid-bg" />
       <div className="scanline" />
       <div className="relative z-10 max-w-[1600px] mx-auto px-4 pb-10">
-        <Header 
-          cycleCount={grid.cycleCount} 
-          timestamp={grid.timestamp} 
-          connectionStatus={connectionStatus} 
+        <Header
+          cycleCount={grid.cycleCount}
+          timestamp={grid.timestamp}
+          connectionStatus={connectionStatus}
           currentRegion={currentRegion}
           onRegionChange={handleRegionChange}
         />

@@ -31,6 +31,24 @@ async def update_region(request: Request, payload: RegionRequest):
     request.app.state.active_region = new_region
     print(f"Grid Region updated to: {new_region.upper()}")
     
+    # Immediately fetch and save new region telemetry to update the UI instantly
+    try:
+        from app.services.eia_service import fetch_grid_data
+        from app.core.database import save_telemetry
+        
+        data = fetch_grid_data(new_region)
+        save_telemetry(
+            total_supply=data["total_supply"],
+            total_demand=data["total_demand"],
+            frequency=data["frequency"],
+            voltage=data["voltage"],
+            stability=data["stability"],
+            alerts=data["alerts"]
+        )
+        print(f"Grid Ingestion: Telemetry updated for switched region: {new_region.upper()}")
+    except Exception as e:
+        print(f"Error fetching telemetry on region switch: {e}")
+        
     return {
         "status": "success",
         "active_region": new_region,
