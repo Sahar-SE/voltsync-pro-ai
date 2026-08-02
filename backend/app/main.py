@@ -18,15 +18,25 @@ async def eia_poll_loop(app: FastAPI):
             active_reg = getattr(app.state, "active_region", EIA_REGION)
             print(f"EIA Ingestion: Fetching grid data for {active_reg.upper()}...")
             data = fetch_grid_data(active_reg)
-            save_telemetry(
-                total_supply=data["total_supply"],
-                total_demand=data["total_demand"],
-                frequency=data["frequency"],
-                voltage=data["voltage"],
-                stability=data["stability"],
-                alerts=data["alerts"]
-            )
-            print("EIA Ingestion: Telemetry cached successfully.")
+            # Only save to database if state represents an anomaly to keep Neon database size minimal
+            stability = data.get("stability", 100.0)
+            frequency = data.get("frequency", 50.0)
+            voltage = data.get("voltage", 220.0)
+            
+            is_abnormal = (stability < 60.0 or frequency < 49.5 or frequency > 50.5 or voltage < 215.0)
+            
+            if is_abnormal:
+                save_telemetry(
+                    total_supply=data["total_supply"],
+                    total_demand=data["total_demand"],
+                    frequency=data["frequency"],
+                    voltage=data["voltage"],
+                    stability=data["stability"],
+                    alerts=data["alerts"]
+                )
+                print("EIA Ingestion: Abnormal telemetry cached in database.")
+            else:
+                print("EIA Ingestion: Grid state is normal. Skipped database storage to save space.")
         except Exception as e:
             print(f"EIA Ingestion Failure: {e}")
         # Wait 15 minutes between polling
