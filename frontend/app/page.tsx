@@ -151,15 +151,16 @@ export default function Home() {
           const err = await response.json();
           throw new Error(err.detail || 'Failed to toggle sector');
         }
-      } catch (e: any) {
-        console.error('Error toggling sector:', e);
+      } catch (e) {
+        const err = e as Error;
+        console.error('Error toggling sector:', err);
         setGrid(prev => {
           if (!prev) return prev;
           const next = { ...prev, sectors: prev.sectors.map(s => s.id === id ? { ...s, online: currentOnline } : s) };
           gridRef.current = next;
           return next;
         });
-        alert(e.message || 'Interlock Block: Safety rule violated.');
+        alert(err.message || 'Interlock Block: Safety rule violated.');
       }
     }
   };
@@ -193,15 +194,16 @@ export default function Home() {
           const err = await response.json();
           throw new Error(err.detail || 'Failed to adjust sector demand');
         }
-      } catch (e: any) {
-        console.error('Error adjusting sector demand:', e);
+      } catch (e) {
+        const err = e as Error;
+        console.error('Error adjusting sector demand:', err);
         setGrid(prev => {
           if (!prev) return prev;
           const next = { ...prev, sectors: prev.sectors.map(s => s.id === id ? { ...s, demand: oldDemand } : s) };
           gridRef.current = next;
           return next;
         });
-        alert(e.message || 'Error adjusting sector demand.');
+        alert(err.message || 'Error adjusting sector demand.');
       }
     }
   };
